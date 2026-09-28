@@ -39,7 +39,10 @@ async function render(md, repo, branch, dir) {
 }
 
 const list = await (await gh(`/users/${cfg.user}/repos?per_page=100&sort=pushed`)).json();
-const repos = list.filter(r => !(cfg.hideForks && r.fork) && !(cfg.exclude || []).includes(r.name));
+// The profile README repo (<user>/<user>) and the site repo (<user>.github.io) are never projects.
+const always = [cfg.user, `${cfg.user}.github.io`].map(n => n.toLowerCase());
+const skip = [...always, ...(cfg.exclude || []).map(n => n.toLowerCase())];
+const repos = list.filter(r => !(cfg.hideForks && r.fork) && !skip.includes(r.name.toLowerCase()));
 
 const out = [];
 for (const r of repos) {
