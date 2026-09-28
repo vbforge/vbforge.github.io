@@ -17,7 +17,7 @@ async function gh(path, opts = {}) {
   return r;
 }
 async function raw(repo, branch, path) {
-  const r = await fetch(`https://raw.githubusercontent.com/${cfg.user}/${repo}/${branch}/${path}`);
+  const r = await fetch(`https://raw.githubusercontent.com/${cfg.user}/${repo}/${branch}/${path}?nocache=${Date.now()}`);
   return r.ok ? r.text() : null;
 }
 
@@ -62,6 +62,7 @@ for (const r of repos) {
   }
   const manifest = { ...(cfg.repos?.[r.name] || {}), ...(own || {}) };
   const rootPom = await raw(r.name, b, "pom.xml");
+  console.log(`  portfolio.json: ${own ? "found" : "not found"}${manifest.autoModules ? ", autoModules on" : ""}; root pom lists ${parseModules(rootPom || "").length} modules`);
 
   // Sub-projects: entries listed in portfolio.json, plus (optionally) Maven modules found in the root pom.xml.
   const specs = (manifest?.projects || []).map(s => ({ ...s, id: slug(s.name || s.path) }));
