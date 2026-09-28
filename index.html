@@ -1,190 +1,855 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Projects</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#f3f5f2;--ink:#14211c;--mute:#5d6b64;--line:#d3dbd5;--acc:#1f6f5b;--row:#fff;--star:#b9800f}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1714;--ink:#e4ece7;--mute:#8fa198;--line:#24322c;--acc:#5fd0ab;--row:#141f1a;--star:#e2ad3b}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
-main{max-width:980px;margin:0 auto;padding:56px 20px 80px}
-h1,h2,h3,h4,.kpi b{font-family:"Bricolage Grotesque",system-ui,sans-serif}
-h1{font-weight:800;font-size:clamp(2.4rem,7vw,4.2rem);line-height:1;margin:0 0 12px;letter-spacing:-.035em}
-.sub{color:var(--mute);max-width:60ch;margin:0 0 28px}
-a{color:var(--acc)}
-:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-button{font:inherit;color:inherit}
-.dash{background:var(--row);border:1px solid var(--line);border-radius:12px;padding:22px;margin:0 0 28px;display:grid;gap:24px}
-.dash h4{margin:0 0 10px;font-size:.95rem;font-weight:600}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.kpi b{display:block;font-size:2.4rem;line-height:1;font-weight:800;letter-spacing:-.03em}
-.kpi span{color:var(--mute);font-size:.85rem}
-.ribbon{display:flex;height:16px;border-radius:8px;overflow:hidden;gap:2px}
-.seg{border:0;padding:0;min-width:4px;cursor:pointer}
-.ribbon.f .seg:not(.on){opacity:.25}
-.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:.88rem}
-.lg{background:none;border:0;padding:0;cursor:pointer;display:flex;gap:6px;align-items:center}
-.lg i{width:10px;height:10px;border-radius:50%}
-.lg span{color:var(--mute)}
-.tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:1px 9px;color:var(--mute);background:none}
-button.tag{cursor:pointer}
-.tag.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
-.bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
-.bar input,.bar select{font:inherit;color:inherit;background:var(--row);border:1px solid var(--line);border-radius:6px;padding:9px 12px}
-.bar input{flex:1 1 220px}
-.pills{margin:0 0 12px;display:flex;gap:6px}
-.sec{font-size:1.05rem;margin:32px 0 10px}
-.list{border-top:1px solid var(--line)}
-.item{display:grid;grid-template-columns:4px 1fr auto;gap:0 18px;padding:20px 12px 20px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
-.item:hover h2{color:var(--acc)}
-.bar-l{border-radius:2px;background:var(--c,var(--mute))}
-.item h2{font-size:1.25rem;line-height:1.25;margin:0 0 4px}
-.item p{margin:0 0 10px;color:var(--mute);max-width:64ch}
-.mods{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;font-size:.78rem;align-items:center}
-.mods small{color:var(--mute);margin-right:4px}
-.mods span{background:var(--bg);border-radius:4px;padding:1px 7px}
-.meta{text-align:right;font-size:.85rem;color:var(--mute);white-space:nowrap}
-.meta b{display:block;color:var(--ink);font-weight:500}
-.stars{color:var(--star)}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}
-.tiles .item{grid-template-columns:1fr;border:1px solid var(--line);border-top:4px solid var(--c,var(--acc));border-radius:10px;padding:18px;background:var(--row)}
-.tiles .bar-l,.tiles .meta br{display:none}
-.tiles .meta{text-align:left;margin-top:12px;display:flex;gap:14px;flex-wrap:wrap}
-.tiles .meta b{display:inline}
-.empty{padding:32px 0;color:var(--mute)}
-.crumb{font-size:.9rem;color:var(--mute);margin:0 0 20px;display:flex;justify-content:space-between;gap:8px 18px;flex-wrap:wrap}
-.links{display:inline-flex;gap:18px}
-.readme{margin-top:24px;overflow-wrap:anywhere}
-.readme h1{font-size:clamp(2rem,5vw,3rem);margin:.2em 0 .4em}
-.readme img{max-width:100%}
-.readme pre{background:var(--row);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
-.readme code{font-size:.9em}
-.readme table{display:block;overflow-x:auto;border-collapse:collapse}
-.readme td,.readme th{border:1px solid var(--line);padding:6px 10px}
-.readme blockquote{margin:0;padding-left:14px;border-left:3px solid var(--line);color:var(--mute)}
-.readme .anchor{display:none}
-@media(max-width:640px){.kpis{grid-template-columns:repeat(3,1fr)}.item{grid-template-columns:4px 1fr}.meta{grid-column:2;text-align:left;margin-top:8px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- DESIGN TOKENS – MEDIUM LIGHT, JAVA INSPIRED ---------- */
+    :root {
+      --bg: #f4f6f9;                /* soft neutral, not white, not grey */
+      --surface: #ffffff;
+      --surface-2: #f0f3f7;
+      --ink: #1e2b3c;               /* deep blue-grey */
+      --ink-soft: #3a4d62;
+      --mute: #5f6f82;
+      --line: #d9e0e8;
+      --line-soft: #e7ecf2;
+      --accent: #c7462e;            /* java warm red / terracotta */
+      --accent-2: #2a6f97;          /* deep ocean blue */
+      --accent-3: #e6a020;          /* warm amber */
+      --star: #d98e1f;
+      --row: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
+      --radius-card: 16px;
+      --radius-btn: 30px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a222c;              /* dark but not black – deep slate */
+        --surface: #222e3a;
+        --surface-2: #2b3846;
+        --ink: #eef3f8;
+        --ink-soft: #cfdde9;
+        --mute: #9aacbc;
+        --line: #354655;
+        --line-soft: #2b3a48;
+        --accent: #e06b4c;
+        --accent-2: #4a9fd8;
+        --accent-3: #f0b84a;
+        --star: #f0b84a;
+        --row: #222e3a;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 400 16px/1.55 "Inter", system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ---------- TYPOGRAPHY – SHARP, TECHNICAL, FRIENDLY ---------- */
+    h1, h2, h3, h4, .kpi b, .item h2, .sec {
+      font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 56px 24px 96px;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: clamp(2.5rem, 7vw, 4.2rem);
+      line-height: 1.05;
+      margin: 0 0 16px;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 80%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .sub {
+      color: var(--mute);
+      max-width: 62ch;
+      margin: 0 0 32px;
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    a {
+      color: var(--accent-2);
+      text-decoration: none;
+      transition: color 0.2s, opacity 0.2s;
+    }
+
+    a:hover {
+      color: var(--accent);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent-2);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* ---------- DASHBOARD CARD – SOFT, ELEVATED ---------- */
+    .dash {
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-card);
+      padding: 28px 28px 32px;
+      margin: 0 0 32px;
+      display: grid;
+      gap: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(2px);
+    }
+
+    .dash h4 {
+      margin: 0 0 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+      opacity: 0.9;
+    }
+
+    /* KPI numbers */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .kpi b {
+      display: block;
+      font-size: 2.6rem;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      background: linear-gradient(to right, var(--accent-2), var(--accent-3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .kpi span {
+      color: var(--mute);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    /* Language ribbon – improved flat design with subtle gaps */
+    .ribbon {
+      display: flex;
+      height: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      gap: 3px;
+      background: var(--bg);
+      padding: 2px;
+    }
+
+    .seg {
+      border: 0;
+      padding: 0;
+      min-width: 6px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: opacity 0.2s, transform 0.1s;
+      background: var(--c, var(--mute));
+      opacity: 0.95;
+    }
+
+    .seg:hover {
+      opacity: 1;
+      transform: scaleY(1.1);
+    }
+
+    .ribbon.f .seg:not(.on) {
+      opacity: 0.2;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin-top: 14px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .lg {
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--ink-soft);
+      transition: color 0.2s;
+      border-radius: 20px;
+    }
+
+    .lg:hover {
+      color: var(--accent-2);
+    }
+
+    .lg i {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .lg span {
+      color: var(--mute);
+      font-weight: 400;
+      font-size: 0.85rem;
+    }
+
+    /* Tags – pill design */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: 4px 14px;
+      color: var(--ink-soft);
+      background: var(--surface-2);
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+    }
+
+    button.tag {
+      cursor: pointer;
+    }
+
+    .tag.on {
+      background: var(--accent-2);
+      color: #fff;
+      border-color: var(--accent-2);
+      font-weight: 600;
+    }
+
+    .tag:hover {
+      border-color: var(--accent-2);
+      background: var(--surface);
+    }
+
+    /* Search / sort bar */
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .bar input,
+    .bar select {
+      font: inherit;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 40px;
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      transition: border 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow);
+    }
+
+    .bar input:focus,
+    .bar select:focus {
+      border-color: var(--accent-2);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(42, 111, 151, 0.15);
+    }
+
+    .bar input {
+      flex: 1 1 240px;
+      min-width: 200px;
+    }
+
+    .bar input::placeholder {
+      color: var(--mute);
+      opacity: 0.7;
+    }
+
+    .pills {
+      margin: 0 0 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Section headings */
+    .sec {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 40px 0 16px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sec::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--line-soft);
+    }
+
+    /* ---------- LIST & CARD LAYOUT ---------- */
+    .list {
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: transparent;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: 6px 1fr auto;
+      gap: 0 24px;
+      padding: 24px 16px 24px 0;
+      border-bottom: 1px solid var(--line-soft);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s, transform 0.1s;
+      border-radius: 0 12px 12px 0;
+      background: transparent;
+      position: relative;
+    }
+
+    .item:hover {
+      background: var(--surface);
+      transform: translateX(4px);
+      box-shadow: var(--shadow);
+    }
+
+    .item:hover h2 {
+      color: var(--accent-2);
+    }
+
+    .bar-l {
+      border-radius: 4px;
+      background: var(--c, var(--mute));
+      transition: width 0.1s;
+      align-self: stretch;
+    }
+
+    .item h2 {
+      font-size: 1.3rem;
+      line-height: 1.3;
+      margin: 0 0 6px;
+      font-weight: 600;
+      transition: color 0.2s;
+      letter-spacing: -0.01em;
+    }
+
+    .item p {
+      margin: 0 0 12px;
+      color: var(--mute);
+      max-width: 68ch;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .mods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+      font-size: 0.78rem;
+      align-items: center;
+    }
+
+    .mods small {
+      color: var(--mute);
+      margin-right: 6px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .mods span {
+      background: var(--surface-2);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      border: 1px solid var(--line-soft);
+      transition: background 0.2s;
+    }
+
+    .mods span:hover {
+      background: var(--accent-2);
+      color: white;
+      border-color: var(--accent-2);
+    }
+
+    .meta {
+      text-align: right;
+      font-size: 0.85rem;
+      color: var(--mute);
+      white-space: nowrap;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .meta b {
+      display: block;
+      color: var(--ink-soft);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .stars {
+      color: var(--star);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(217, 142, 31, 0.08);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    /* ---------- TILES (FEATURED) – CARD GRID ---------- */
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+      gap: 20px;
+    }
+
+    .tiles .item {
+      grid-template-columns: 1fr;
+      border: 1px solid var(--line-soft);
+      border-top: 6px solid var(--c, var(--accent-2));
+      border-radius: 20px;
+      padding: 24px 24px 20px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.3s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tiles .item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 30px -8px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent-2);
+    }
+
+    .tiles .bar-l,
+    .tiles .meta br {
+      display: none;
+    }
+
+    .tiles .meta {
+      text-align: left;
+      margin-top: auto;
+      padding-top: 16px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line-soft);
+      font-size: 0.85rem;
+      align-items: center;
+    }
+
+    .tiles .meta b {
+      display: inline;
+      margin: 0;
+    }
+
+    .tiles .item h2 {
+      font-size: 1.45rem;
+      margin-bottom: 10px;
+    }
+
+    .tiles .item p {
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+
+    /* ---------- README & DETAIL PAGE ---------- */
+    .crumb {
+      font-size: 0.95rem;
+      color: var(--mute);
+      margin: 0 0 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px 24px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-weight: 500;
+    }
+
+    .links {
+      display: inline-flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      padding: 6px 18px;
+      border-radius: 40px;
+      border: 1px solid var(--line);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      box-shadow: var(--shadow);
+    }
+
+    .links a:hover {
+      border-color: var(--accent-2);
+      background: var(--accent-2);
+      color: white;
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .readme {
+      margin-top: 32px;
+      overflow-wrap: anywhere;
+      color: var(--ink-soft);
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+
+    .readme h1 {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      margin: 0.2em 0 0.6em;
+      background: none;
+      color: var(--ink);
+      -webkit-background-clip: unset;
+      background-clip: unset;
+    }
+
+    .readme h2 {
+      font-size: 1.6rem;
+      margin: 1.6em 0 0.6em;
+      border-bottom: 2px solid var(--line-soft);
+      padding-bottom: 0.2em;
+      color: var(--ink);
+    }
+
+    .readme h3 {
+      font-size: 1.3rem;
+      margin: 1.4em 0 0.4em;
+      color: var(--accent-2);
+    }
+
+    .readme p {
+      margin: 0 0 1.2em;
+    }
+
+    .readme img {
+      max-width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--line-soft);
+      box-shadow: var(--shadow);
+    }
+
+    .readme pre {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      box-shadow: var(--shadow);
+      color: var(--ink-soft);
+    }
+
+    .readme code {
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-size: 0.88em;
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid var(--line-soft);
+      color: var(--accent);
+    }
+
+    .readme pre code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: inherit;
+    }
+
+    .readme table {
+      display: block;
+      overflow-x: auto;
+      border-collapse: collapse;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      width: 100%;
+    }
+
+    .readme td,
+    .readme th {
+      border: 1px solid var(--line);
+      padding: 12px 18px;
+      text-align: left;
+    }
+
+    .readme th {
+      background: var(--surface-2);
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .readme blockquote {
+      margin: 1.5em 0;
+      padding-left: 20px;
+      border-left: 5px solid var(--accent-3);
+      color: var(--mute);
+      font-style: italic;
+      background: var(--surface-2);
+      border-radius: 0 12px 12px 0;
+      padding: 12px 20px;
+    }
+
+    .readme .anchor {
+      display: none;
+    }
+
+    .empty {
+      padding: 48px 24px;
+      color: var(--mute);
+      text-align: center;
+      background: var(--surface);
+      border-radius: 24px;
+      border: 1px dashed var(--line);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 640px) {
+      main {
+        padding: 32px 16px 64px;
+      }
+
+      .kpis {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .kpi b {
+        font-size: 1.9rem;
+      }
+
+      .item {
+        grid-template-columns: 6px 1fr;
+        padding: 20px 8px 20px 0;
+        gap: 0 16px;
+      }
+
+      .meta {
+        grid-column: 2;
+        text-align: left;
+        margin-top: 12px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .meta br {
+        display: none;
+      }
+
+      .meta b {
+        display: inline;
+        margin: 0;
+      }
+
+      .dash {
+        padding: 20px;
+      }
+
+      .bar input,
+      .bar select {
+        padding: 10px 16px;
+      }
+
+      .tiles .meta {
+        gap: 12px;
+      }
+
+      .crumb {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
 <main id="app"></main>
 <script>
-const app = document.getElementById("app");
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const PAL = {Java:"#b07219",Kotlin:"#7f52ff",JavaScript:"#d4b106",TypeScript:"#3178c6",Python:"#3572a5",HTML:"#e34c26",CSS:"#7a4cc0",Shell:"#3f8f3f",Dockerfile:"#2f7fc1",PLpgSQL:"#336790"};
-const col = l => PAL[l] || `hsl(${[...l].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7) % 360} 45% 45%)`;
-const fmt = d => new Date(d).toLocaleDateString(undefined, {month:"short", year:"numeric"});
-let D; const st = {q:"", lang:"", topic:"", sort:"updated"};
+  const app = document.getElementById("app");
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const PAL = {
+    Java:"#b07219", Kotlin:"#7f52ff", JavaScript:"#d4b106", TypeScript:"#3178c6",
+    Python:"#3572a5", HTML:"#e34c26", CSS:"#7a4cc0", Shell:"#3f8f3f",
+    Dockerfile:"#2f7fc1", PLpgSQL:"#336790"
+  };
+  const col = l => PAL[l] || `hsl(${[...l].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7) % 360} 45% 45%)`;
+  const fmt = d => new Date(d).toLocaleDateString(undefined, {month:"short", year:"numeric"});
+  let D; const st = {q:"", lang:"", topic:"", sort:"updated"};
 
-const tags = o => (o.topics || []).filter(t => t !== "featured").map(t => `<span class="tag">${esc(t)}</span>`).join("");
-const mods = r => r.projects?.length ? `<div class="mods"><small>Modules</small>${r.projects.slice(0, 6).map(p => `<span>${esc(p.name)}</span>`).join("")}${r.projects.length > 6 ? `<span>+${r.projects.length - 6}</span>` : ""}</div>` : "";
-const card = (o, href) => `
+  const tags = o => (o.topics || []).filter(t => t !== "featured").map(t => `<span class="tag">${esc(t)}</span>`).join("");
+  const mods = r => r.projects?.length ? `<div class="mods"><small>Modules</small>${r.projects.slice(0, 6).map(p => `<span>${esc(p.name)}</span>`).join("")}${r.projects.length > 6 ? `<span>+${r.projects.length - 6}</span>` : ""}</div>` : "";
+  const card = (o, href) => `
   <a class="item" href="${href}" style="--c:${col(o.language || "")}">
     <span class="bar-l"></span>
     <div><h2>${esc(o.name)}</h2><p>${esc(o.description || "No description yet.")}</p><div class="tags">${tags(o)}</div>${mods(o)}</div>
     <div class="meta"><b>${esc(o.language || "")}</b>${o.projects?.length ? o.projects.length + " modules<br>" : ""}${o.stars != null ? `<span class="stars">★ ${o.stars}</span><br>` : ""}${o.pushed ? "Updated " + fmt(o.pushed) : ""}</div>
   </a>`;
 
-function dash() {
-  const R = D.repos, bytes = {}, topics = {};
-  R.forEach(r => {
-    const L = r.languages && Object.keys(r.languages).length ? r.languages : (r.language ? {[r.language]: 1} : {});
-    for (const k in L) bytes[k] = (bytes[k] || 0) + L[k];
-    r.topics.filter(t => t !== "featured").forEach(t => topics[t] = (topics[t] || 0) + 1);
-  });
-  const L = Object.entries(bytes).sort((a, b) => b[1] - a[1]), sum = L.reduce((n, [, v]) => n + v, 0) || 1;
-  const T = Object.entries(topics).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 12);
-  const kpi = (n, l) => `<div class="kpi"><b>${n}</b><span>${l}</span></div>`;
-  return `<section class="dash" aria-label="Statistics">
+  function dash() {
+    const R = D.repos, bytes = {}, topics = {};
+    R.forEach(r => {
+      const L = r.languages && Object.keys(r.languages).length ? r.languages : (r.language ? {[r.language]: 1} : {});
+      for (const k in L) bytes[k] = (bytes[k] || 0) + L[k];
+      r.topics.filter(t => t !== "featured").forEach(t => topics[t] = (topics[t] || 0) + 1);
+    });
+    const L = Object.entries(bytes).sort((a, b) => b[1] - a[1]), sum = L.reduce((n, [, v]) => n + v, 0) || 1;
+    const T = Object.entries(topics).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 12);
+    const kpi = (n, l) => `<div class="kpi"><b>${n}</b><span>${l}</span></div>`;
+    return `<section class="dash" aria-label="Statistics">
     <div class="kpis">${kpi(R.length, "Repositories")}${kpi(R.reduce((n, r) => n + r.stars, 0), "Stars")}${kpi(L.length, "Languages")}</div>
     <div><h4>Languages</h4>
       <div class="ribbon${st.lang ? " f" : ""}">${L.map(([k, v]) => `<button class="seg${st.lang === k ? " on" : ""}" data-lang="${esc(k)}" style="flex:${v};background:${col(k)}" title="${esc(k)} ${Math.round(v / sum * 100)}%" aria-label="Filter by ${esc(k)}"></button>`).join("")}</div>
       <div class="legend">${L.slice(0, 7).map(([k, v]) => `<button class="lg" data-lang="${esc(k)}"><i style="background:${col(k)}"></i>${esc(k)} <span>${Math.round(v / sum * 100)}%</span></button>`).join("")}</div></div>
     ${T.length ? `<div><h4>Topics</h4><div class="tags">${T.map(([t, n]) => `<button class="tag${st.topic === t ? " on" : ""}" data-topic="${esc(t)}">${esc(t)} ${n}</button>`).join("")}</div></div>` : ""}
   </section>`;
-}
+  }
 
-function home() {
-  document.title = D.user + " · Projects";
-  app.innerHTML = `<h1>${esc(D.user)}</h1><p class="sub">${esc(D.tagline)}</p>${dash()}
+  function home() {
+    document.title = D.user + " · Projects";
+    app.innerHTML = `<h1>${esc(D.user)}</h1><p class="sub">${esc(D.tagline)}</p>${dash()}
     <div class="bar">
       <input id="q" type="search" placeholder="Search projects, topics or modules" aria-label="Search" value="${esc(st.q)}">
       <select id="sort" aria-label="Sort"><option value="updated">Recently updated</option><option value="stars">Most stars</option><option value="name">Name</option></select>
     </div>
     ${st.lang || st.topic ? `<p class="pills">${st.lang ? `<button class="tag on" data-clear="lang">${esc(st.lang)} ×</button>` : ""}${st.topic ? `<button class="tag on" data-clear="topic">${esc(st.topic)} ×</button>` : ""}</p>` : ""}
     <div id="res"></div>`;
-  document.getElementById("sort").value = st.sort;
-  document.getElementById("q").oninput = e => { st.q = e.target.value; paint(); };
-  document.getElementById("sort").onchange = e => { st.sort = e.target.value; paint(); };
-  paint();
-}
+    document.getElementById("sort").value = st.sort;
+    document.getElementById("q").oninput = e => { st.q = e.target.value; paint(); };
+    document.getElementById("sort").onchange = e => { st.sort = e.target.value; paint(); };
+    paint();
+  }
 
-function paint() {
-  const n = st.q.trim().toLowerCase();
-  const hit = r => (!n || [r.name, r.description, ...r.topics, ...r.projects.flatMap(p => [p.name, p.description])].join(" ").toLowerCase().includes(n))
-    && (!st.lang || r.language === st.lang || r.languages?.[st.lang])
-    && (!st.topic || r.topics.includes(st.topic) || r.projects.some(p => p.topics.includes(st.topic)));
-  const plain = !n && !st.lang && !st.topic;
-  const feat = plain ? D.repos.filter(r => r.featured) : [];
-  const rest = D.repos.filter(r => hit(r) && !(plain && r.featured));
-  rest.sort(st.sort === "stars" ? (a, b) => b.stars - a.stars : st.sort === "name" ? (a, b) => a.name.localeCompare(b.name) : (a, b) => new Date(b.pushed) - new Date(a.pushed));
-  document.getElementById("res").innerHTML =
-    (feat.length ? `<h3 class="sec">Featured</h3><div class="tiles">${feat.map(r => card(r, "#/r/" + r.name)).join("")}</div>` : "") +
-    (rest.length ? `${feat.length ? `<h3 class="sec">All projects</h3>` : ""}<div class="list">${rest.map(r => card(r, "#/r/" + r.name)).join("")}</div>` : "") ||
-    `<div class="empty">No projects match. Clear the search or filters.</div>`;
-}
+  function paint() {
+    const n = st.q.trim().toLowerCase();
+    const hit = r => (!n || [r.name, r.description, ...r.topics, ...r.projects.flatMap(p => [p.name, p.description])].join(" ").toLowerCase().includes(n))
+      && (!st.lang || r.language === st.lang || r.languages?.[st.lang])
+      && (!st.topic || r.topics.includes(st.topic) || r.projects.some(p => p.topics.includes(st.topic)));
+    const plain = !n && !st.lang && !st.topic;
+    const feat = plain ? D.repos.filter(r => r.featured) : [];
+    const rest = D.repos.filter(r => hit(r) && !(plain && r.featured));
+    rest.sort(st.sort === "stars" ? (a, b) => b.stars - a.stars : st.sort === "name" ? (a, b) => a.name.localeCompare(b.name) : (a, b) => new Date(b.pushed) - new Date(a.pushed));
+    document.getElementById("res").innerHTML =
+      (feat.length ? `<h3 class="sec">Featured</h3><div class="tiles">${feat.map(r => card(r, "#/r/" + r.name)).join("")}</div>` : "") +
+      (rest.length ? `${feat.length ? `<h3 class="sec">All projects</h3>` : ""}<div class="list">${rest.map(r => card(r, "#/r/" + r.name)).join("")}</div>` : "") ||
+      `<div class="empty">No projects match. Clear the search or filters.</div>`;
+  }
 
-function missing() { app.innerHTML = `<p class="crumb"><a href="#/">All projects</a></p><div class="empty">That project doesn't exist. Go back to the list.</div>`; }
+  function missing() { app.innerHTML = `<p class="crumb"><a href="#/">All projects</a></p><div class="empty">That project doesn't exist. Go back to the list.</div>`; }
 
-function detail(rn, sn) {
-  const r = D.repos.find(x => x.name === rn);
-  const s = sn && r?.projects.find(p => p.id === sn);
-  if (!r || (sn && !s)) return missing();
-  const o = s || r, k = r.projects.length, html = o.readme || "";
-  document.title = o.name + " · " + D.user;
-  const hasH1 = /<h1[\s>]/.test(html);   // if the README has its own title, use that instead of the repo name
-  const extra = (!s && k ? `<h3 class="sec">Includes ${k} modules</h3><div class="list">${r.projects.map(p => card({...p, language: r.language}, `#/r/${esc(r.name)}/${p.id}`)).join("")}</div>` : "")
-    + (s && k > 1 ? `<h3 class="sec">Other modules in ${esc(r.name)}</h3><div class="tags">${r.projects.filter(p => p.id !== s.id).map(p => `<a class="tag" href="#/r/${esc(r.name)}/${p.id}">${esc(p.name)}</a>`).join("")}</div>` : "");
-  const art = h => h ? `<article class="readme">${h}</article>` : "";
-  const cut = hasH1 ? html.search(/<h2[\s>]/) : -1;   // modules go after the README's title and intro
-  const body = hasH1 ? (cut > 0 ? art(html.slice(0, cut)) + extra + art(html.slice(cut)) : art(html) + extra)
-    : extra + (html ? art(html) : '<p class="empty">This project has no README yet.</p>');
-  app.innerHTML = `<p class="crumb"><span><a href="#/">All projects</a>${s ? ` / <a href="#/r/${esc(r.name)}">${esc(r.name)}</a>` : ""}</span>
+  function detail(rn, sn) {
+    const r = D.repos.find(x => x.name === rn);
+    const s = sn && r?.projects.find(p => p.id === sn);
+    if (!r || (sn && !s)) return missing();
+    const o = s || r, k = r.projects.length, html = o.readme || "";
+    document.title = o.name + " · " + D.user;
+    const hasH1 = /<h1[\s>]/.test(html);
+    const extra = (!s && k ? `<h3 class="sec">Includes ${k} modules</h3><div class="list">${r.projects.map(p => card({...p, language: r.language}, `#/r/${esc(r.name)}/${p.id}`)).join("")}</div>` : "")
+      + (s && k > 1 ? `<h3 class="sec">Other modules in ${esc(r.name)}</h3><div class="tags">${r.projects.filter(p => p.id !== s.id).map(p => `<a class="tag" href="#/r/${esc(r.name)}/${p.id}">${esc(p.name)}</a>`).join("")}</div>` : "");
+    const art = h => h ? `<article class="readme">${h}</article>` : "";
+    const cut = hasH1 ? html.search(/<h2[\s>]/) : -1;
+    const body = hasH1 ? (cut > 0 ? art(html.slice(0, cut)) + extra + art(html.slice(cut)) : art(html) + extra)
+      : extra + (html ? art(html) : '<p class="empty">This project has no README yet.</p>');
+    app.innerHTML = `<p class="crumb"><span><a href="#/">All projects</a>${s ? ` / <a href="#/r/${esc(r.name)}">${esc(r.name)}</a>` : ""}</span>
       <span class="links"><a href="${esc(o.url)}" target="_blank" rel="noopener">View on GitHub</a>${o.homepage ? `<a href="${esc(o.homepage)}" target="_blank" rel="noopener">Live site</a>` : ""}</span></p>
     ${hasH1 ? "" : `<h1>${esc(o.name)}</h1><p class="sub">${esc(o.description)}</p>`}
     ${tags(o) ? `<div class="tags">${tags(o)}</div>` : ""}
     ${body}`;
-  app.querySelectorAll(".readme a[href^=http]").forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
-}
-
-function route() {
-  const [, k, rn, sn] = location.hash.split("/");
-  scrollTo(0, 0);
-  k === "r" ? detail(rn, sn) : home();
-}
-
-app.addEventListener("click", e => {
-  const c = e.target.closest("[data-lang],[data-topic],[data-clear]");
-  if (c) {
-    const d = c.dataset;
-    if (d.clear) st[d.clear] = ""; else if (d.lang) st.lang = st.lang === d.lang ? "" : d.lang; else st.topic = st.topic === d.topic ? "" : d.topic;
-    return home();
+    app.querySelectorAll(".readme a[href^=http]").forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
   }
-  const a = e.target.closest(".readme a[href^='#']");
-  if (!a) return;
-  e.preventDefault();
-  const id = decodeURIComponent(a.getAttribute("href").slice(1));
-  (document.getElementById(id) || document.getElementById("user-content-" + id))?.scrollIntoView();
-});
 
-addEventListener("hashchange", route);
-fetch("data/projects.json", {cache: "no-cache"}).then(r => r.json()).then(d => { D = d; route(); })
-  .catch(() => { app.innerHTML = `<p class="empty">Couldn't load data/projects.json. Run the "Update projects" workflow, and open the site over http (not file://).</p>`; });
+  function route() {
+    const [, k, rn, sn] = location.hash.split("/");
+    scrollTo(0, 0);
+    k === "r" ? detail(rn, sn) : home();
+  }
+
+  app.addEventListener("click", e => {
+    const c = e.target.closest("[data-lang],[data-topic],[data-clear]");
+    if (c) {
+      const d = c.dataset;
+      if (d.clear) st[d.clear] = ""; else if (d.lang) st.lang = st.lang === d.lang ? "" : d.lang; else st.topic = st.topic === d.topic ? "" : d.topic;
+      return home();
+    }
+    const a = e.target.closest(".readme a[href^='#']");
+    if (!a) return;
+    e.preventDefault();
+    const id = decodeURIComponent(a.getAttribute("href").slice(1));
+    (document.getElementById(id) || document.getElementById("user-content-" + id))?.scrollIntoView();
+  });
+
+  addEventListener("hashchange", route);
+  fetch("data/projects.json", {cache: "no-cache"}).then(r => r.json()).then(d => { D = d; route(); })
+    .catch(() => { app.innerHTML = `<p class="empty">Couldn't load data/projects.json. Run the "Update projects" workflow, and open the site over http (not file://).</p>`; });
 </script>
 </body>
 </html>
