@@ -20,7 +20,7 @@ a{color:var(--acc)}
 button{font:inherit;color:inherit}
 .dash{background:var(--row);border:1px solid var(--line);border-radius:12px;padding:22px;margin:0 0 28px;display:grid;gap:24px}
 .dash h4{margin:0 0 10px;font-size:.95rem;font-weight:600}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .kpi b{display:block;font-size:2.4rem;line-height:1;font-weight:800;letter-spacing:-.03em}
 .kpi span{color:var(--mute);font-size:.85rem}
 .ribbon{display:flex;height:16px;border-radius:8px;overflow:hidden;gap:2px}
@@ -30,11 +30,6 @@ button{font:inherit;color:inherit}
 .lg{background:none;border:0;padding:0;cursor:pointer;display:flex;gap:6px;align-items:center}
 .lg i{width:10px;height:10px;border-radius:50%}
 .lg span{color:var(--mute)}
-.two{display:grid;grid-template-columns:1fr 1.4fr;gap:24px}
-.years{display:flex;align-items:flex-end;gap:10px;height:96px}
-.yr{flex:1;max-width:60px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:.8rem}
-.yr span{width:100%;background:var(--acc);border-radius:4px 4px 0 0;min-height:4px}
-.yr b{font-weight:400;color:var(--mute);font-size:.75rem;margin-top:4px}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 .tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:1px 9px;color:var(--mute);background:none}
 button.tag{cursor:pointer}
@@ -62,9 +57,10 @@ button.tag{cursor:pointer}
 .tiles .meta{text-align:left;margin-top:12px;display:flex;gap:14px;flex-wrap:wrap}
 .tiles .meta b{display:inline}
 .empty{padding:32px 0;color:var(--mute)}
-.crumb{font-size:.9rem;color:var(--mute);margin:0 0 20px}
-.links{display:flex;gap:18px;margin:16px 0 0}
-.readme{margin-top:32px;border-top:1px solid var(--line);padding-top:8px;overflow-wrap:anywhere}
+.crumb{font-size:.9rem;color:var(--mute);margin:0 0 20px;display:flex;justify-content:space-between;gap:8px 18px;flex-wrap:wrap}
+.links{display:inline-flex;gap:18px}
+.readme{margin-top:24px;overflow-wrap:anywhere}
+.readme h1{font-size:clamp(2rem,5vw,3rem);margin:.2em 0 .4em}
 .readme img{max-width:100%}
 .readme pre{background:var(--row);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
 .readme code{font-size:.9em}
@@ -72,7 +68,7 @@ button.tag{cursor:pointer}
 .readme td,.readme th{border:1px solid var(--line);padding:6px 10px}
 .readme blockquote{margin:0;padding-left:14px;border-left:3px solid var(--line);color:var(--mute)}
 .readme .anchor{display:none}
-@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.item{grid-template-columns:4px 1fr}.meta{grid-column:2;text-align:left;margin-top:8px}}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(3,1fr)}.item{grid-template-columns:4px 1fr}.meta{grid-column:2;text-align:left;margin-top:8px}}
 </style>
 </head>
 <body>
@@ -95,27 +91,22 @@ const card = (o, href) => `
   </a>`;
 
 function dash() {
-  const R = D.repos, bytes = {}, years = {}, topics = {};
+  const R = D.repos, bytes = {}, topics = {};
   R.forEach(r => {
     const L = r.languages && Object.keys(r.languages).length ? r.languages : (r.language ? {[r.language]: 1} : {});
     for (const k in L) bytes[k] = (bytes[k] || 0) + L[k];
-    if (r.created) years[r.created.slice(0, 4)] = (years[r.created.slice(0, 4)] || 0) + 1;
     r.topics.filter(t => t !== "featured").forEach(t => topics[t] = (topics[t] || 0) + 1);
   });
   const L = Object.entries(bytes).sort((a, b) => b[1] - a[1]), sum = L.reduce((n, [, v]) => n + v, 0) || 1;
-  const Y = Object.entries(years).sort(), max = Math.max(1, ...Y.map(([, n]) => n));
   const T = Object.entries(topics).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 12);
-  const total = R.reduce((n, r) => n + (r.projects.length || 1), 0);
   const kpi = (n, l) => `<div class="kpi"><b>${n}</b><span>${l}</span></div>`;
   return `<section class="dash" aria-label="Statistics">
-    <div class="kpis">${kpi(R.length, "Repositories")}${kpi(total, "Projects incl. modules")}${kpi(R.reduce((n, r) => n + r.stars, 0), "Stars")}${kpi(L.length, "Languages")}</div>
+    <div class="kpis">${kpi(R.length, "Repositories")}${kpi(R.reduce((n, r) => n + r.stars, 0), "Stars")}${kpi(L.length, "Languages")}</div>
     <div><h4>Languages</h4>
       <div class="ribbon${st.lang ? " f" : ""}">${L.map(([k, v]) => `<button class="seg${st.lang === k ? " on" : ""}" data-lang="${esc(k)}" style="flex:${v};background:${col(k)}" title="${esc(k)} ${Math.round(v / sum * 100)}%" aria-label="Filter by ${esc(k)}"></button>`).join("")}</div>
       <div class="legend">${L.slice(0, 7).map(([k, v]) => `<button class="lg" data-lang="${esc(k)}"><i style="background:${col(k)}"></i>${esc(k)} <span>${Math.round(v / sum * 100)}%</span></button>`).join("")}</div></div>
-    <div class="two">
-      ${Y.length ? `<div><h4>Repositories started per year</h4><div class="years">${Y.map(([y, n]) => `<div class="yr"><em>${n}</em><span style="height:${n / max * 70}%"></span><b>${y}</b></div>`).join("")}</div></div>` : ""}
-      ${T.length ? `<div><h4>Topics</h4><div class="tags">${T.map(([t, n]) => `<button class="tag${st.topic === t ? " on" : ""}" data-topic="${esc(t)}">${esc(t)} ${n}</button>`).join("")}</div></div>` : ""}
-    </div></section>`;
+    ${T.length ? `<div><h4>Topics</h4><div class="tags">${T.map(([t, n]) => `<button class="tag${st.topic === t ? " on" : ""}" data-topic="${esc(t)}">${esc(t)} ${n}</button>`).join("")}</div></div>` : ""}
+  </section>`;
 }
 
 function home() {
@@ -154,15 +145,20 @@ function detail(rn, sn) {
   const r = D.repos.find(x => x.name === rn);
   const s = sn && r?.projects.find(p => p.id === sn);
   if (!r || (sn && !s)) return missing();
-  const o = s || r, k = r.projects.length;
+  const o = s || r, k = r.projects.length, html = o.readme || "";
   document.title = o.name + " · " + D.user;
-  const chips = list => `<div class="tags">${list.map(p => `<a class="tag" href="#/r/${esc(r.name)}/${p.id}">${esc(p.name)}</a>`).join("")}</div>`;
-  app.innerHTML = `<p class="crumb"><a href="#/">All projects</a>${s ? ` / <a href="#/r/${esc(r.name)}">${esc(r.name)}</a>` : ""}</p>
-    <h1>${esc(o.name)}</h1><p class="sub">${esc(o.description)}</p><div class="tags">${tags(o)}</div>
-    <p class="links"><a href="${esc(o.url)}" target="_blank" rel="noopener">View on GitHub</a>${o.homepage ? `<a href="${esc(o.homepage)}" target="_blank" rel="noopener">Live site</a>` : ""}</p>
-    ${!s && k ? `<h3 class="sec">Includes ${k} modules</h3><div class="list">${r.projects.map(p => card({...p, language: r.language}, `#/r/${esc(r.name)}/${p.id}`)).join("")}</div>` : ""}
-    ${s && k > 1 ? `<h3 class="sec">Other modules in ${esc(r.name)}</h3>${chips(r.projects.filter(p => p.id !== s.id))}` : ""}
-    <article class="readme">${o.readme || '<p class="empty">This project has no README yet.</p>'}</article>`;
+  const hasH1 = /<h1[\s>]/.test(html);   // if the README has its own title, use that instead of the repo name
+  const extra = (!s && k ? `<h3 class="sec">Includes ${k} modules</h3><div class="list">${r.projects.map(p => card({...p, language: r.language}, `#/r/${esc(r.name)}/${p.id}`)).join("")}</div>` : "")
+    + (s && k > 1 ? `<h3 class="sec">Other modules in ${esc(r.name)}</h3><div class="tags">${r.projects.filter(p => p.id !== s.id).map(p => `<a class="tag" href="#/r/${esc(r.name)}/${p.id}">${esc(p.name)}</a>`).join("")}</div>` : "");
+  const art = h => h ? `<article class="readme">${h}</article>` : "";
+  const cut = hasH1 ? html.search(/<h2[\s>]/) : -1;   // modules go after the README's title and intro
+  const body = hasH1 ? (cut > 0 ? art(html.slice(0, cut)) + extra + art(html.slice(cut)) : art(html) + extra)
+    : extra + (html ? art(html) : '<p class="empty">This project has no README yet.</p>');
+  app.innerHTML = `<p class="crumb"><span><a href="#/">All projects</a>${s ? ` / <a href="#/r/${esc(r.name)}">${esc(r.name)}</a>` : ""}</span>
+      <span class="links"><a href="${esc(o.url)}" target="_blank" rel="noopener">View on GitHub</a>${o.homepage ? `<a href="${esc(o.homepage)}" target="_blank" rel="noopener">Live site</a>` : ""}</span></p>
+    ${hasH1 ? "" : `<h1>${esc(o.name)}</h1><p class="sub">${esc(o.description)}</p>`}
+    ${tags(o) ? `<div class="tags">${tags(o)}</div>` : ""}
+    ${body}`;
   app.querySelectorAll(".readme a[href^=http]").forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
 }
 

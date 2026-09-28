@@ -56,6 +56,10 @@ for (const r of repos) {
   // Per-repo settings: portfolio.json in that repo's root wins over the "repos" entry in projects.config.json.
   let own = null;
   try { own = JSON.parse((await raw(r.name, b, "portfolio.json")) || "null"); } catch { console.warn("  bad portfolio.json"); }
+  if (own?.repos) { // tolerate the hub-config shape ("repos": { "<name>": {...} }) inside a project repo
+    console.log('  portfolio.json has a "repos" wrapper; using its entry for this repo');
+    own = own.repos[r.name] || {};
+  }
   const manifest = { ...(cfg.repos?.[r.name] || {}), ...(own || {}) };
   const rootPom = await raw(r.name, b, "pom.xml");
 
@@ -92,7 +96,7 @@ for (const r of repos) {
 
   out.push({
     name: r.name,
-    description: r.description || manifest?.description || "",
+    description: r.description || manifest?.description || firstParagraph(md),
     language: r.language,
     stars: r.stargazers_count,
     pushed: r.pushed_at,
