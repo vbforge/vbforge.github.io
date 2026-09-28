@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f2;--ink:#14211c;--mute:#5d6b64;--line:#d3dbd5;--acc:#1f6f5b;--row:#fff;--star:#b9800f}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1714;--ink:#e4ece7;--mute:#8fa198;--line:#24322c;--acc:#5fd0ab;--row:#141f1a;--star:#e2ad3b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+main{max-width:920px;margin:0 auto;padding:56px 20px 80px}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+h1{font-weight:800;font-size:clamp(2.2rem,6vw,3.6rem);line-height:1;margin:0 0 12px;letter-spacing:-.03em}
+.sub{color:var(--mute);max-width:60ch;margin:0 0 28px}
+a{color:var(--acc)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.bar input,.bar select{font:inherit;color:inherit;background:var(--row);border:1px solid var(--line);border-radius:6px;padding:9px 12px}
+.bar input{flex:1 1 220px}
+.sec{font-size:1.05rem;margin:32px 0 8px}
+.list{border-top:1px solid var(--line)}
+.item{display:grid;grid-template-columns:4px 1fr auto;gap:0 18px;padding:20px 12px 20px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.item.feat{background:var(--row)}
+.item:hover h2{color:var(--acc)}
+.bar-l{border-radius:2px;background:var(--c,var(--mute))}
+.item h2{font-size:1.25rem;line-height:1.25;margin:0 0 4px}
+.item p{margin:0 0 10px;color:var(--mute);max-width:64ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:1px 9px;color:var(--mute)}
+.meta{text-align:right;font-size:.85rem;color:var(--mute);white-space:nowrap}
+.meta b{display:block;color:var(--ink);font-weight:500}
+.stars{color:var(--star)}
+.empty{padding:32px 0;color:var(--mute)}
+.crumb{font-size:.9rem;color:var(--mute);margin:0 0 20px}
+.links{display:flex;gap:18px;margin:16px 0 0}
+.readme{margin-top:32px;border-top:1px solid var(--line);padding-top:8px;overflow-wrap:anywhere}
+.readme img{max-width:100%}
+.readme pre{background:var(--row);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
+.readme code{font-size:.9em}
+.readme table{display:block;overflow-x:auto;border-collapse:collapse}
+.readme td,.readme th{border:1px solid var(--line);padding:6px 10px}
+.readme blockquote{margin:0;padding-left:14px;border-left:3px solid var(--line);color:var(--mute)}
+.readme .anchor{display:none}
+@media(max-width:560px){.item{grid-template-columns:4px 1fr}.meta{grid-column:2;text-align:left;margin-top:8px}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const app = document.getElementById("app");
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const COLORS = {Java:"#b07219",JavaScript:"#d4b106",TypeScript:"#3178c6",Python:"#3572a5",HTML:"#e34c26",Shell:"#3f8f3f"};
+const fmt = d => new Date(d).toLocaleDateString(undefined, {month:"short", year:"numeric"});
+let D, q = "", sort = "updated";
+
+const tags = o => (o.topics || []).filter(t => t !== "featured").map(t => `<span class="tag">${esc(t)}</span>`).join("");
+const row = (o, href) => `
+  <a class="item${o.featured ? " feat" : ""}" href="${href}" style="--c:${COLORS[o.language] || ""}">
+    <span class="bar-l"></span>
+    <div><h2>${esc(o.name)}</h2><p>${esc(o.description || "No description yet.")}</p><div class="tags">${tags(o)}</div></div>
+    <div class="meta"><b>${esc(o.language || "")}</b>${o.projects?.length ? o.projects.length + " projects<br>" : ""}${o.stars != null ? `<span class="stars">★ ${o.stars}</span><br>` : ""}${o.pushed ? "Updated " + fmt(o.pushed) : ""}</div>
+  </a>`;
+
+function home() {
+  document.title = D.user + " · Projects";
+  app.innerHTML = `<h1>${esc(D.user)}</h1><p class="sub">${esc(D.tagline)}</p>
+    <div class="bar">
+      <input id="q" type="search" placeholder="Search projects, topics or sub-projects" aria-label="Search" value="${esc(q)}">
+      <select id="sort" aria-label="Sort"><option value="updated">Recently updated</option><option value="stars">Most stars</option><option value="name">Name</option></select>
+    </div><div id="res"></div>`;
+  document.getElementById("sort").value = sort;
+  document.getElementById("q").oninput = e => { q = e.target.value; paint(); };
+  document.getElementById("sort").onchange = e => { sort = e.target.value; paint(); };
+  paint();
+}
+
+function paint() {
+  const needle = q.trim().toLowerCase();
+  const hit = r => !needle || [r.name, r.description, ...r.topics, ...r.projects.flatMap(p => [p.name, p.description])].join(" ").toLowerCase().includes(needle);
+  const feat = D.repos.filter(r => r.featured && hit(r));
+  const rest = D.repos.filter(r => (needle || !r.featured) && hit(r));
+  rest.sort(sort === "stars" ? (a, b) => b.stars - a.stars : sort === "name" ? (a, b) => a.name.localeCompare(b.name) : (a, b) => new Date(b.pushed) - new Date(a.pushed));
+  const block = (title, rs) => rs.length ? `${title ? `<h3 class="sec">${title}</h3>` : ""}<div class="list">${rs.map(r => row(r, "#/r/" + r.name)).join("")}</div>` : "";
+  document.getElementById("res").innerHTML = (needle ? "" : block("Featured", feat)) + block(needle || !feat.length ? "" : "All projects", rest)
+    || `<div class="empty">No projects match. Clear the search to see everything.</div>`;
+}
+
+function missing() { app.innerHTML = `<p class="crumb"><a href="#/">All projects</a></p><div class="empty">That project doesn't exist. Go back to the list.</div>`; }
+
+function detail(rn, sn) {
+  const r = D.repos.find(x => x.name === rn);
+  const s = sn && r?.projects.find(p => p.id === sn);
+  if (!r || (sn && !s)) return missing();
+  const o = s || r;
+  document.title = o.name + " · " + D.user;
+  app.innerHTML = `<p class="crumb"><a href="#/">All projects</a>${s ? ` / <a href="#/r/${esc(r.name)}">${esc(r.name)}</a>` : ""}</p>
+    <h1>${esc(o.name)}</h1><p class="sub">${esc(o.description)}</p><div class="tags">${tags(o)}</div>
+    <p class="links"><a href="${esc(o.url)}" target="_blank" rel="noopener">View on GitHub</a>${o.homepage ? `<a href="${esc(o.homepage)}" target="_blank" rel="noopener">Live site</a>` : ""}</p>
+    ${!s && r.projects.length ? `<h3 class="sec">Projects in this repository</h3><div class="list">${r.projects.map(p => row({...p, language: r.language}, `#/r/${esc(r.name)}/${p.id}`)).join("")}</div>` : ""}
+    <article class="readme">${o.readme || '<p class="empty">This project has no README yet.</p>'}</article>`;
+  app.querySelectorAll(".readme a[href^=http]").forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
+}
+
+function route() {
+  const [, k, rn, sn] = location.hash.split("/");
+  scrollTo(0, 0);
+  k === "r" ? detail(rn, sn) : home();
+}
+
+// In-page README anchors (table of contents) must not trigger the router.
+app.addEventListener("click", e => {
+  const a = e.target.closest(".readme a[href^='#']");
+  if (!a) return;
+  e.preventDefault();
+  const id = decodeURIComponent(a.getAttribute("href").slice(1));
+  (document.getElementById(id) || document.getElementById("user-content-" + id))?.scrollIntoView();
+});
+
+addEventListener("hashchange", route);
+fetch("data/projects.json").then(r => r.json()).then(d => { D = d; route(); })
+  .catch(() => { app.innerHTML = `<p class="empty">Couldn't load data/projects.json. Run the "Update projects" workflow, and open the site over http (not file://).</p>`; });
+</script>
+</body>
+</html>
