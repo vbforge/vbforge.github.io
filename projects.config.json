@@ -2,7 +2,7 @@
   "user": "vbforge",
   "tagline": "Java backend projects: Spring Boot, Kafka and distributed-systems experiments.",
   "hideForks": true,
-  "exclude": ["vbforge.github.io", "vbforge"],
+  "exclude": ["vbforge.github.io", "vbforge/vbforge"],
   "autoModules": ["java-spring-testing-guide"],
   "featured": ["kafka-lag-lab", "interviewlab-ai"]
 }
