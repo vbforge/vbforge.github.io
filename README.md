@@ -14,4 +14,4 @@ Pin a project: add its name to "featured" in projects.config.json, or give the r
 Maven multi-module repos: to turn every module in the root pom.xml into its own project, either list the repo in
 "autoModules" in projects.config.json, or put { "autoModules": true, "exclude": ["common"] } in that repo's portfolio.json.
 Module description = <description> in the module's pom.xml, otherwise the first sentence of its README.md.
-Entries you list by hand in portfolio.json win over automatic ones.
+Entries you list by hand in portfolio.json win over automatic ones.  
