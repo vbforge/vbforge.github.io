@@ -47,19 +47,22 @@ const repos = list.filter(r => !(cfg.hideForks && r.fork) && !skip.includes(r.na
 const out = [];
 for (const r of repos) {
   const b = r.default_branch;
+  const languages = (await (await gh(`/repos/${cfg.user}/${r.name}/languages`))?.json()) || {};
   console.log("Processing", r.name);
 
   const rd = await (await gh(`/repos/${cfg.user}/${r.name}/readme`))?.json();
   const md = rd ? Buffer.from(rd.content, "base64").toString("utf8") : "";
 
-  // Optional: a portfolio.json at the repo root lists the projects inside this repo.
-  let manifest = null;
-  try { manifest = JSON.parse((await raw(r.name, b, "portfolio.json")) || "null"); } catch { console.warn("  bad portfolio.json"); }
+  // Per-repo settings: portfolio.json in that repo's root wins over the "repos" entry in projects.config.json.
+  let own = null;
+  try { own = JSON.parse((await raw(r.name, b, "portfolio.json")) || "null"); } catch { console.warn("  bad portfolio.json"); }
+  const manifest = { ...(cfg.repos?.[r.name] || {}), ...(own || {}) };
+  const rootPom = await raw(r.name, b, "pom.xml");
 
   // Sub-projects: entries listed in portfolio.json, plus (optionally) Maven modules found in the root pom.xml.
   const specs = (manifest?.projects || []).map(s => ({ ...s, id: slug(s.name || s.path) }));
   if (manifest?.autoModules === true || (cfg.autoModules || []).includes(r.name)) {
-    const pom = await raw(r.name, b, "pom.xml");
+    const pom = rootPom;
     if (!pom) console.warn("  autoModules is on but there is no root pom.xml");
     const skip = manifest?.exclude || [];
     for (const path of parseModules(pom || "")) {
@@ -69,6 +72,8 @@ for (const r of repos) {
       if (isPomPackaging(mpom)) continue;
       specs.push({ name: base, path, description: parseDescription(mpom), id: slug(path) });
     }
+  } else if (parseModules(rootPom || "").length > 1) {
+    console.log(`  hint: looks multi-module (${parseModules(rootPom).length} modules). To list them, add "${r.name}" to "autoModules" in projects.config.json.`);
   }
 
   const projects = [];
@@ -91,6 +96,8 @@ for (const r of repos) {
     language: r.language,
     stars: r.stargazers_count,
     pushed: r.pushed_at,
+    created: r.created_at,
+    languages,
     topics: r.topics || [],
     url: r.html_url,
     homepage: r.homepage || "",
@@ -99,6 +106,10 @@ for (const r of repos) {
     projects,
   });
 }
+
+for (const n of [...(cfg.autoModules || []), ...(cfg.featured || []), ...Object.keys(cfg.repos || {})])
+  if (!out.some(r => r.name === n)) console.warn(`WARNING: "${n}" in projects.config.json matches no listed repo. Check the exact name (public, not a fork).`);
+for (const r of out) console.log(`${r.name}: ${r.projects.length} modules`);
 
 // Featured: names in projects.config.json (in that order), plus any repo with the "featured" topic.
 const feat = (cfg.featured || []).map(n => out.find(r => r.name === n)).filter(Boolean);

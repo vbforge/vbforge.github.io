@@ -11,28 +11,56 @@
 @media(prefers-color-scheme:dark){:root{--bg:#0f1714;--ink:#e4ece7;--mute:#8fa198;--line:#24322c;--acc:#5fd0ab;--row:#141f1a;--star:#e2ad3b}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
-main{max-width:920px;margin:0 auto;padding:56px 20px 80px}
-h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif}
-h1{font-weight:800;font-size:clamp(2.2rem,6vw,3.6rem);line-height:1;margin:0 0 12px;letter-spacing:-.03em}
+main{max-width:980px;margin:0 auto;padding:56px 20px 80px}
+h1,h2,h3,h4,.kpi b{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+h1{font-weight:800;font-size:clamp(2.4rem,7vw,4.2rem);line-height:1;margin:0 0 12px;letter-spacing:-.035em}
 .sub{color:var(--mute);max-width:60ch;margin:0 0 28px}
 a{color:var(--acc)}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-.bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+button{font:inherit;color:inherit}
+.dash{background:var(--row);border:1px solid var(--line);border-radius:12px;padding:22px;margin:0 0 28px;display:grid;gap:24px}
+.dash h4{margin:0 0 10px;font-size:.95rem;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi b{display:block;font-size:2.4rem;line-height:1;font-weight:800;letter-spacing:-.03em}
+.kpi span{color:var(--mute);font-size:.85rem}
+.ribbon{display:flex;height:16px;border-radius:8px;overflow:hidden;gap:2px}
+.seg{border:0;padding:0;min-width:4px;cursor:pointer}
+.ribbon.f .seg:not(.on){opacity:.25}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:.88rem}
+.lg{background:none;border:0;padding:0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.lg i{width:10px;height:10px;border-radius:50%}
+.lg span{color:var(--mute)}
+.two{display:grid;grid-template-columns:1fr 1.4fr;gap:24px}
+.years{display:flex;align-items:flex-end;gap:10px;height:96px}
+.yr{flex:1;max-width:60px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:.8rem}
+.yr span{width:100%;background:var(--acc);border-radius:4px 4px 0 0;min-height:4px}
+.yr b{font-weight:400;color:var(--mute);font-size:.75rem;margin-top:4px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:1px 9px;color:var(--mute);background:none}
+button.tag{cursor:pointer}
+.tag.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
 .bar input,.bar select{font:inherit;color:inherit;background:var(--row);border:1px solid var(--line);border-radius:6px;padding:9px 12px}
 .bar input{flex:1 1 220px}
-.sec{font-size:1.05rem;margin:32px 0 8px}
+.pills{margin:0 0 12px;display:flex;gap:6px}
+.sec{font-size:1.05rem;margin:32px 0 10px}
 .list{border-top:1px solid var(--line)}
 .item{display:grid;grid-template-columns:4px 1fr auto;gap:0 18px;padding:20px 12px 20px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
-.item.feat{background:var(--row)}
 .item:hover h2{color:var(--acc)}
 .bar-l{border-radius:2px;background:var(--c,var(--mute))}
 .item h2{font-size:1.25rem;line-height:1.25;margin:0 0 4px}
 .item p{margin:0 0 10px;color:var(--mute);max-width:64ch}
-.tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:1px 9px;color:var(--mute)}
+.mods{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;font-size:.78rem;align-items:center}
+.mods small{color:var(--mute);margin-right:4px}
+.mods span{background:var(--bg);border-radius:4px;padding:1px 7px}
 .meta{text-align:right;font-size:.85rem;color:var(--mute);white-space:nowrap}
 .meta b{display:block;color:var(--ink);font-weight:500}
 .stars{color:var(--star)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}
+.tiles .item{grid-template-columns:1fr;border:1px solid var(--line);border-top:4px solid var(--c,var(--acc));border-radius:10px;padding:18px;background:var(--row)}
+.tiles .bar-l,.tiles .meta br{display:none}
+.tiles .meta{text-align:left;margin-top:12px;display:flex;gap:14px;flex-wrap:wrap}
+.tiles .meta b{display:inline}
 .empty{padding:32px 0;color:var(--mute)}
 .crumb{font-size:.9rem;color:var(--mute);margin:0 0 20px}
 .links{display:flex;gap:18px;margin:16px 0 0}
@@ -44,7 +72,7 @@ a{color:var(--acc)}
 .readme td,.readme th{border:1px solid var(--line);padding:6px 10px}
 .readme blockquote{margin:0;padding-left:14px;border-left:3px solid var(--line);color:var(--mute)}
 .readme .anchor{display:none}
-@media(max-width:560px){.item{grid-template-columns:4px 1fr}.meta{grid-column:2;text-align:left;margin-top:8px}}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.item{grid-template-columns:4px 1fr}.meta{grid-column:2;text-align:left;margin-top:8px}}
 </style>
 </head>
 <body>
@@ -52,40 +80,72 @@ a{color:var(--acc)}
 <script>
 const app = document.getElementById("app");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const COLORS = {Java:"#b07219",JavaScript:"#d4b106",TypeScript:"#3178c6",Python:"#3572a5",HTML:"#e34c26",Shell:"#3f8f3f"};
+const PAL = {Java:"#b07219",Kotlin:"#7f52ff",JavaScript:"#d4b106",TypeScript:"#3178c6",Python:"#3572a5",HTML:"#e34c26",CSS:"#7a4cc0",Shell:"#3f8f3f",Dockerfile:"#2f7fc1",PLpgSQL:"#336790"};
+const col = l => PAL[l] || `hsl(${[...l].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7) % 360} 45% 45%)`;
 const fmt = d => new Date(d).toLocaleDateString(undefined, {month:"short", year:"numeric"});
-let D, q = "", sort = "updated";
+let D; const st = {q:"", lang:"", topic:"", sort:"updated"};
 
 const tags = o => (o.topics || []).filter(t => t !== "featured").map(t => `<span class="tag">${esc(t)}</span>`).join("");
-const row = (o, href) => `
-  <a class="item${o.featured ? " feat" : ""}" href="${href}" style="--c:${COLORS[o.language] || ""}">
+const mods = r => r.projects?.length ? `<div class="mods"><small>Modules</small>${r.projects.slice(0, 6).map(p => `<span>${esc(p.name)}</span>`).join("")}${r.projects.length > 6 ? `<span>+${r.projects.length - 6}</span>` : ""}</div>` : "";
+const card = (o, href) => `
+  <a class="item" href="${href}" style="--c:${col(o.language || "")}">
     <span class="bar-l"></span>
-    <div><h2>${esc(o.name)}</h2><p>${esc(o.description || "No description yet.")}</p><div class="tags">${tags(o)}</div></div>
-    <div class="meta"><b>${esc(o.language || "")}</b>${o.projects?.length ? o.projects.length + " projects<br>" : ""}${o.stars != null ? `<span class="stars">★ ${o.stars}</span><br>` : ""}${o.pushed ? "Updated " + fmt(o.pushed) : ""}</div>
+    <div><h2>${esc(o.name)}</h2><p>${esc(o.description || "No description yet.")}</p><div class="tags">${tags(o)}</div>${mods(o)}</div>
+    <div class="meta"><b>${esc(o.language || "")}</b>${o.projects?.length ? o.projects.length + " modules<br>" : ""}${o.stars != null ? `<span class="stars">★ ${o.stars}</span><br>` : ""}${o.pushed ? "Updated " + fmt(o.pushed) : ""}</div>
   </a>`;
+
+function dash() {
+  const R = D.repos, bytes = {}, years = {}, topics = {};
+  R.forEach(r => {
+    const L = r.languages && Object.keys(r.languages).length ? r.languages : (r.language ? {[r.language]: 1} : {});
+    for (const k in L) bytes[k] = (bytes[k] || 0) + L[k];
+    if (r.created) years[r.created.slice(0, 4)] = (years[r.created.slice(0, 4)] || 0) + 1;
+    r.topics.filter(t => t !== "featured").forEach(t => topics[t] = (topics[t] || 0) + 1);
+  });
+  const L = Object.entries(bytes).sort((a, b) => b[1] - a[1]), sum = L.reduce((n, [, v]) => n + v, 0) || 1;
+  const Y = Object.entries(years).sort(), max = Math.max(1, ...Y.map(([, n]) => n));
+  const T = Object.entries(topics).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 12);
+  const total = R.reduce((n, r) => n + (r.projects.length || 1), 0);
+  const kpi = (n, l) => `<div class="kpi"><b>${n}</b><span>${l}</span></div>`;
+  return `<section class="dash" aria-label="Statistics">
+    <div class="kpis">${kpi(R.length, "Repositories")}${kpi(total, "Projects incl. modules")}${kpi(R.reduce((n, r) => n + r.stars, 0), "Stars")}${kpi(L.length, "Languages")}</div>
+    <div><h4>Languages</h4>
+      <div class="ribbon${st.lang ? " f" : ""}">${L.map(([k, v]) => `<button class="seg${st.lang === k ? " on" : ""}" data-lang="${esc(k)}" style="flex:${v};background:${col(k)}" title="${esc(k)} ${Math.round(v / sum * 100)}%" aria-label="Filter by ${esc(k)}"></button>`).join("")}</div>
+      <div class="legend">${L.slice(0, 7).map(([k, v]) => `<button class="lg" data-lang="${esc(k)}"><i style="background:${col(k)}"></i>${esc(k)} <span>${Math.round(v / sum * 100)}%</span></button>`).join("")}</div></div>
+    <div class="two">
+      ${Y.length ? `<div><h4>Repositories started per year</h4><div class="years">${Y.map(([y, n]) => `<div class="yr"><em>${n}</em><span style="height:${n / max * 70}%"></span><b>${y}</b></div>`).join("")}</div></div>` : ""}
+      ${T.length ? `<div><h4>Topics</h4><div class="tags">${T.map(([t, n]) => `<button class="tag${st.topic === t ? " on" : ""}" data-topic="${esc(t)}">${esc(t)} ${n}</button>`).join("")}</div></div>` : ""}
+    </div></section>`;
+}
 
 function home() {
   document.title = D.user + " · Projects";
-  app.innerHTML = `<h1>${esc(D.user)}</h1><p class="sub">${esc(D.tagline)}</p>
+  app.innerHTML = `<h1>${esc(D.user)}</h1><p class="sub">${esc(D.tagline)}</p>${dash()}
     <div class="bar">
-      <input id="q" type="search" placeholder="Search projects, topics or sub-projects" aria-label="Search" value="${esc(q)}">
+      <input id="q" type="search" placeholder="Search projects, topics or modules" aria-label="Search" value="${esc(st.q)}">
       <select id="sort" aria-label="Sort"><option value="updated">Recently updated</option><option value="stars">Most stars</option><option value="name">Name</option></select>
-    </div><div id="res"></div>`;
-  document.getElementById("sort").value = sort;
-  document.getElementById("q").oninput = e => { q = e.target.value; paint(); };
-  document.getElementById("sort").onchange = e => { sort = e.target.value; paint(); };
+    </div>
+    ${st.lang || st.topic ? `<p class="pills">${st.lang ? `<button class="tag on" data-clear="lang">${esc(st.lang)} ×</button>` : ""}${st.topic ? `<button class="tag on" data-clear="topic">${esc(st.topic)} ×</button>` : ""}</p>` : ""}
+    <div id="res"></div>`;
+  document.getElementById("sort").value = st.sort;
+  document.getElementById("q").oninput = e => { st.q = e.target.value; paint(); };
+  document.getElementById("sort").onchange = e => { st.sort = e.target.value; paint(); };
   paint();
 }
 
 function paint() {
-  const needle = q.trim().toLowerCase();
-  const hit = r => !needle || [r.name, r.description, ...r.topics, ...r.projects.flatMap(p => [p.name, p.description])].join(" ").toLowerCase().includes(needle);
-  const feat = D.repos.filter(r => r.featured && hit(r));
-  const rest = D.repos.filter(r => (needle || !r.featured) && hit(r));
-  rest.sort(sort === "stars" ? (a, b) => b.stars - a.stars : sort === "name" ? (a, b) => a.name.localeCompare(b.name) : (a, b) => new Date(b.pushed) - new Date(a.pushed));
-  const block = (title, rs) => rs.length ? `${title ? `<h3 class="sec">${title}</h3>` : ""}<div class="list">${rs.map(r => row(r, "#/r/" + r.name)).join("")}</div>` : "";
-  document.getElementById("res").innerHTML = (needle ? "" : block("Featured", feat)) + block(needle || !feat.length ? "" : "All projects", rest)
-    || `<div class="empty">No projects match. Clear the search to see everything.</div>`;
+  const n = st.q.trim().toLowerCase();
+  const hit = r => (!n || [r.name, r.description, ...r.topics, ...r.projects.flatMap(p => [p.name, p.description])].join(" ").toLowerCase().includes(n))
+    && (!st.lang || r.language === st.lang || r.languages?.[st.lang])
+    && (!st.topic || r.topics.includes(st.topic) || r.projects.some(p => p.topics.includes(st.topic)));
+  const plain = !n && !st.lang && !st.topic;
+  const feat = plain ? D.repos.filter(r => r.featured) : [];
+  const rest = D.repos.filter(r => hit(r) && !(plain && r.featured));
+  rest.sort(st.sort === "stars" ? (a, b) => b.stars - a.stars : st.sort === "name" ? (a, b) => a.name.localeCompare(b.name) : (a, b) => new Date(b.pushed) - new Date(a.pushed));
+  document.getElementById("res").innerHTML =
+    (feat.length ? `<h3 class="sec">Featured</h3><div class="tiles">${feat.map(r => card(r, "#/r/" + r.name)).join("")}</div>` : "") +
+    (rest.length ? `${feat.length ? `<h3 class="sec">All projects</h3>` : ""}<div class="list">${rest.map(r => card(r, "#/r/" + r.name)).join("")}</div>` : "") ||
+    `<div class="empty">No projects match. Clear the search or filters.</div>`;
 }
 
 function missing() { app.innerHTML = `<p class="crumb"><a href="#/">All projects</a></p><div class="empty">That project doesn't exist. Go back to the list.</div>`; }
@@ -94,12 +154,14 @@ function detail(rn, sn) {
   const r = D.repos.find(x => x.name === rn);
   const s = sn && r?.projects.find(p => p.id === sn);
   if (!r || (sn && !s)) return missing();
-  const o = s || r;
+  const o = s || r, k = r.projects.length;
   document.title = o.name + " · " + D.user;
+  const chips = list => `<div class="tags">${list.map(p => `<a class="tag" href="#/r/${esc(r.name)}/${p.id}">${esc(p.name)}</a>`).join("")}</div>`;
   app.innerHTML = `<p class="crumb"><a href="#/">All projects</a>${s ? ` / <a href="#/r/${esc(r.name)}">${esc(r.name)}</a>` : ""}</p>
     <h1>${esc(o.name)}</h1><p class="sub">${esc(o.description)}</p><div class="tags">${tags(o)}</div>
     <p class="links"><a href="${esc(o.url)}" target="_blank" rel="noopener">View on GitHub</a>${o.homepage ? `<a href="${esc(o.homepage)}" target="_blank" rel="noopener">Live site</a>` : ""}</p>
-    ${!s && r.projects.length ? `<h3 class="sec">Projects in this repository</h3><div class="list">${r.projects.map(p => row({...p, language: r.language}, `#/r/${esc(r.name)}/${p.id}`)).join("")}</div>` : ""}
+    ${!s && k ? `<h3 class="sec">Includes ${k} modules</h3><div class="list">${r.projects.map(p => card({...p, language: r.language}, `#/r/${esc(r.name)}/${p.id}`)).join("")}</div>` : ""}
+    ${s && k > 1 ? `<h3 class="sec">Other modules in ${esc(r.name)}</h3>${chips(r.projects.filter(p => p.id !== s.id))}` : ""}
     <article class="readme">${o.readme || '<p class="empty">This project has no README yet.</p>'}</article>`;
   app.querySelectorAll(".readme a[href^=http]").forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
 }
@@ -110,8 +172,13 @@ function route() {
   k === "r" ? detail(rn, sn) : home();
 }
 
-// In-page README anchors (table of contents) must not trigger the router.
 app.addEventListener("click", e => {
+  const c = e.target.closest("[data-lang],[data-topic],[data-clear]");
+  if (c) {
+    const d = c.dataset;
+    if (d.clear) st[d.clear] = ""; else if (d.lang) st.lang = st.lang === d.lang ? "" : d.lang; else st.topic = st.topic === d.topic ? "" : d.topic;
+    return home();
+  }
   const a = e.target.closest(".readme a[href^='#']");
   if (!a) return;
   e.preventDefault();
@@ -120,7 +187,7 @@ app.addEventListener("click", e => {
 });
 
 addEventListener("hashchange", route);
-fetch("data/projects.json").then(r => r.json()).then(d => { D = d; route(); })
+fetch("data/projects.json", {cache: "no-cache"}).then(r => r.json()).then(d => { D = d; route(); })
   .catch(() => { app.innerHTML = `<p class="empty">Couldn't load data/projects.json. Run the "Update projects" workflow, and open the site over http (not file://).</p>`; });
 </script>
 </body>
