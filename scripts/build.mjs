@@ -8,6 +8,8 @@ const H = {
   "User-Agent": "portfolio-build",
   ...(process.env.GITHUB_TOKEN && { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }),
 };
+// #tags from portfolio.json: trim, drop a leading "#", lower-case, spaces -> "-", no duplicates
+const tagsOf = a => [...new Set((Array.isArray(a) ? a : []).map(t => String(t).trim().replace(/^#+/, "").toLowerCase().replace(/\s+/g, "-")).filter(Boolean))];
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 async function gh(path, opts = {}) {
@@ -90,6 +92,7 @@ for (const r of repos) {
       path: s.path,
       description: s.description || firstParagraph(smd),
       topics: s.topics || [],
+      tags: tagsOf([...(s.tags || []), ...(s.topics || [])]),
       url: `${r.html_url}/tree/${b}/${s.path}`,
       readme: smd ? await render(smd, r.name, b, s.path) : "",
     });
@@ -104,6 +107,7 @@ for (const r of repos) {
     created: r.created_at,
     languages,
     topics: r.topics || [],
+    tags: tagsOf(manifest.tags),
     url: r.html_url,
     homepage: r.homepage || "",
     featured: false,
@@ -118,7 +122,7 @@ for (const r of out) console.log(`${r.name}: ${r.projects.length} modules`);
 
 // Featured: names in projects.config.json (in that order), plus any repo with the "featured" topic.
 const feat = (cfg.featured || []).map(n => out.find(r => r.name === n)).filter(Boolean);
-for (const r of out) if (r.topics.includes("featured") && !feat.includes(r)) feat.push(r);
+for (const r of out) if ((r.topics.includes("featured") || r.tags.includes("featured")) && !feat.includes(r)) feat.push(r);
 feat.forEach(r => (r.featured = true));
 
 fs.mkdirSync("data", { recursive: true });

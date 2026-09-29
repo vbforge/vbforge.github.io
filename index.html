@@ -730,6 +730,11 @@
         align-items: flex-start;
       }
     }
+
+    /* clickable #tags */
+    [data-tag] { cursor: pointer; }
+    .tag[data-tag]:hover { border-color: var(--accent-2); color: var(--accent-2); }
+    .tag.on[data-tag]:hover { color: inherit; }
   </style>
 </head>
 <body>
@@ -744,9 +749,11 @@
   };
   const col = l => PAL[l] || `hsl(${[...l].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7) % 360} 45% 45%)`;
   const fmt = d => new Date(d).toLocaleDateString(undefined, {month:"short", year:"numeric"});
-  let D; const st = {q:"", lang:"", topic:"", sort:"updated"};
+  let D; const st = {q:"", lang:"", tag:"", sort:"updated"};
 
-  const tags = o => (o.topics || []).filter(t => t !== "featured").map(t => `<span class="tag">${esc(t)}</span>`).join("");
+  // curated #tags from portfolio.json; falls back to GitHub topics for repos without tags
+  const tagList = o => ((o.tags && o.tags.length ? o.tags : o.topics) || []).filter(t => t !== "featured");
+  const tags = o => tagList(o).map(t => `<span class="tag${st.tag === t ? " on" : ""}" data-tag="${esc(t)}">#${esc(t)}</span>`).join("");
   const mods = r => r.projects?.length ? `<div class="mods"><small>Modules</small>${r.projects.slice(0, 6).map(p => `<span>${esc(p.name)}</span>`).join("")}${r.projects.length > 6 ? `<span>+${r.projects.length - 6}</span>` : ""}</div>` : "";
   const card = (o, href) => `
   <a class="item" href="${href}" style="--c:${col(o.language || "")}">
@@ -760,17 +767,17 @@
     R.forEach(r => {
       const L = r.languages && Object.keys(r.languages).length ? r.languages : (r.language ? {[r.language]: 1} : {});
       for (const k in L) bytes[k] = (bytes[k] || 0) + L[k];
-      r.topics.filter(t => t !== "featured").forEach(t => topics[t] = (topics[t] || 0) + 1);
+      new Set([...tagList(r), ...(r.projects || []).flatMap(tagList)]).forEach(t => topics[t] = (topics[t] || 0) + 1);
     });
     const L = Object.entries(bytes).sort((a, b) => b[1] - a[1]), sum = L.reduce((n, [, v]) => n + v, 0) || 1;
-    const T = Object.entries(topics).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 12);
+    const T = Object.entries(topics).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 30);
     const kpi = (n, l) => `<div class="kpi"><b>${n}</b><span>${l}</span></div>`;
     return `<section class="dash" aria-label="Statistics">
     <div class="kpis">${kpi(R.length, "Repositories")}${kpi(R.reduce((n, r) => n + r.stars, 0), "Stars")}${kpi(L.length, "Languages")}</div>
     <div><h4>Languages</h4>
       <div class="ribbon${st.lang ? " f" : ""}">${L.map(([k, v]) => `<button class="seg${st.lang === k ? " on" : ""}" data-lang="${esc(k)}" style="flex:${v};background:${col(k)}" title="${esc(k)} ${Math.round(v / sum * 100)}%" aria-label="Filter by ${esc(k)}"></button>`).join("")}</div>
       <div class="legend">${L.slice(0, 7).map(([k, v]) => `<button class="lg" data-lang="${esc(k)}"><i style="background:${col(k)}"></i>${esc(k)} <span>${Math.round(v / sum * 100)}%</span></button>`).join("")}</div></div>
-    ${T.length ? `<div><h4>Topics</h4><div class="tags">${T.map(([t, n]) => `<button class="tag${st.topic === t ? " on" : ""}" data-topic="${esc(t)}">${esc(t)} ${n}</button>`).join("")}</div></div>` : ""}
+    ${T.length ? `<div><h4>Tags</h4><div class="tags">${T.map(([t, n]) => `<button class="tag${st.tag === t ? " on" : ""}" data-tag="${esc(t)}">#${esc(t)} ${n}</button>`).join("")}</div></div>` : ""}
   </section>`;
   }
 
@@ -778,10 +785,10 @@
     document.title = D.user + " · Projects";
     app.innerHTML = `<h1>${esc(D.user)}</h1><p class="sub">${esc(D.tagline)}</p>${dash()}
     <div class="bar">
-      <input id="q" type="search" placeholder="Search projects, topics or modules" aria-label="Search" value="${esc(st.q)}">
+      <input id="q" type="search" placeholder="Search projects, tags or modules" aria-label="Search" value="${esc(st.q)}">
       <select id="sort" aria-label="Sort"><option value="updated">Recently updated</option><option value="stars">Most stars</option><option value="name">Name</option></select>
     </div>
-    ${st.lang || st.topic ? `<p class="pills">${st.lang ? `<button class="tag on" data-clear="lang">${esc(st.lang)} ×</button>` : ""}${st.topic ? `<button class="tag on" data-clear="topic">${esc(st.topic)} ×</button>` : ""}</p>` : ""}
+    ${st.lang || st.tag ? `<p class="pills">${st.lang ? `<button class="tag on" data-clear="lang">${esc(st.lang)} ×</button>` : ""}${st.tag ? `<button class="tag on" data-clear="tag">#${esc(st.tag)} ×</button>` : ""}</p>` : ""}
     <div id="res"></div>`;
     document.getElementById("sort").value = st.sort;
     document.getElementById("q").oninput = e => { st.q = e.target.value; paint(); };
@@ -791,10 +798,10 @@
 
   function paint() {
     const n = st.q.trim().toLowerCase();
-    const hit = r => (!n || [r.name, r.description, ...r.topics, ...r.projects.flatMap(p => [p.name, p.description])].join(" ").toLowerCase().includes(n))
+    const hit = r => (!n || [r.name, r.description, ...r.topics, ...tagList(r), ...r.projects.flatMap(p => [p.name, p.description, ...tagList(p)])].join(" ").toLowerCase().includes(n))
       && (!st.lang || r.language === st.lang || r.languages?.[st.lang])
-      && (!st.topic || r.topics.includes(st.topic) || r.projects.some(p => p.topics.includes(st.topic)));
-    const plain = !n && !st.lang && !st.topic;
+      && (!st.tag || tagList(r).includes(st.tag) || r.projects.some(p => tagList(p).includes(st.tag)));
+    const plain = !n && !st.lang && !st.tag;
     const feat = plain ? D.repos.filter(r => r.featured) : [];
     const rest = D.repos.filter(r => hit(r) && !(plain && r.featured));
     rest.sort(st.sort === "stars" ? (a, b) => b.stars - a.stars : st.sort === "name" ? (a, b) => a.name.localeCompare(b.name) : (a, b) => new Date(b.pushed) - new Date(a.pushed));
@@ -834,10 +841,14 @@
   }
 
   app.addEventListener("click", e => {
-    const c = e.target.closest("[data-lang],[data-topic],[data-clear]");
+    const c = e.target.closest("[data-lang],[data-tag],[data-clear]");
     if (c) {
-      const d = c.dataset;
-      if (d.clear) st[d.clear] = ""; else if (d.lang) st.lang = st.lang === d.lang ? "" : d.lang; else st.topic = st.topic === d.topic ? "" : d.topic;
+      e.preventDefault();   // tags inside a card must not open the card
+      const d = c.dataset, onDetail = location.hash.startsWith("#/r/");
+      if (d.clear) st[d.clear] = "";
+      else if (d.lang) st.lang = st.lang === d.lang ? "" : d.lang;
+      else st.tag = !onDetail && st.tag === d.tag ? "" : d.tag;
+      if (onDetail) { location.hash = "#/"; return; }   // jump back to the list, filtered
       return home();
     }
     const a = e.target.closest(".readme a[href^='#']");
