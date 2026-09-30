@@ -8,7 +8,7 @@ const H = {
   "User-Agent": "portfolio-build",
   ...(process.env.GITHUB_TOKEN && { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }),
 };
-// #tags from portfolio.json: trim, drop a leading "#", lower-case, spaces -> "-", no duplicates
+// #tags from modules-in-repo.json: trim, drop a leading "#", lower-case, spaces -> "-", no duplicates
 const tagsOf = a => [...new Set((Array.isArray(a) ? a : []).map(t => String(t).trim().replace(/^#+/, "").toLowerCase().replace(/\s+/g, "-")).filter(Boolean))];
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
@@ -55,18 +55,21 @@ for (const r of repos) {
   const rd = await (await gh(`/repos/${cfg.user}/${r.name}/readme`))?.json();
   const md = rd ? Buffer.from(rd.content, "base64").toString("utf8") : "";
 
-  // Per-repo settings: portfolio.json in that repo's root wins over the "repos" entry in projects.config.json.
+  // Per-repo settings: modules-in-repo.json in that repo's root wins over the "repos" entry in projects.config.json.
+  // The old name portfolio.json is still read as a fallback, so repos can be renamed one at a time.
+  let file = "modules-in-repo.json", txt = await raw(r.name, b, file);
+  if (txt == null) { file = "portfolio.json"; txt = await raw(r.name, b, file); }
   let own = null;
-  try { own = JSON.parse((await raw(r.name, b, "portfolio.json")) || "null"); } catch { console.warn("  bad portfolio.json"); }
+  try { own = JSON.parse(txt || "null"); } catch { console.warn(`  bad ${file}`); }
   if (own?.repos) { // tolerate the hub-config shape ("repos": { "<name>": {...} }) inside a project repo
-    console.log('  portfolio.json has a "repos" wrapper; using its entry for this repo');
+    console.log(`  ${file} has a "repos" wrapper; using its entry for this repo`);
     own = own.repos[r.name] || {};
   }
   const manifest = { ...(cfg.repos?.[r.name] || {}), ...(own || {}) };
   const rootPom = await raw(r.name, b, "pom.xml");
-  console.log(`  portfolio.json: ${own ? "found" : "not found"}${manifest.autoModules ? ", autoModules on" : ""}; root pom lists ${parseModules(rootPom || "").length} modules`);
+  console.log(`  ${own ? file : "modules-in-repo.json"}: ${own ? "found" : "not found"}${manifest.autoModules ? ", autoModules on" : ""}; root pom lists ${parseModules(rootPom || "").length} modules`);
 
-  // Sub-projects: entries listed in portfolio.json, plus (optionally) Maven modules found in the root pom.xml.
+  // Sub-projects: entries listed in modules-in-repo.json, plus (optionally) Maven modules found in the root pom.xml.
   const specs = (manifest?.projects || []).map(s => ({ ...s, id: slug(s.name || s.path) }));
   if (manifest?.autoModules === true || (cfg.autoModules || []).includes(r.name)) {
     const pom = rootPom;
